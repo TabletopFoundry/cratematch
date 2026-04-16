@@ -1,3 +1,4 @@
+import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { OnboardingWizard } from "@/components/onboarding-wizard";
 import { getOnboardingSnapshot, getProfileSummaryLine } from "@/lib/server-data";
 
@@ -34,6 +35,7 @@ export default function OnboardingPage() {
           </div>
         </div>
 
+        <ComponentErrorBoundary sectionName="Onboarding wizard">
         <OnboardingWizard
           quizGames={snapshot.quizGames}
           allThemes={snapshot.allThemes}
@@ -44,6 +46,7 @@ export default function OnboardingPage() {
           initialMechanics={snapshot.mechanics}
           initialRadarData={snapshot.radarData}
         />
+        </ComponentErrorBoundary>
       </section>
     </div>
   );

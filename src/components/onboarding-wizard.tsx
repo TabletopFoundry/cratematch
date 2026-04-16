@@ -47,7 +47,7 @@ export function OnboardingWizard({
     Object.fromEntries(initialAnswers.map((answer) => [answer.gameSlug, answer.rating]))
   );
 
-  const steps = ["Rate 1-5", "Rate 6-10", "Rate 11-15", "Themes", "Mechanics", "Preferences", "Summary"];
+  const steps = ["Games 1–5", "Games 6–10", "Games 11–15", "Themes", "Mechanics", "Preferences", "Summary"];
   const quizStepCount = Math.ceil(quizGames.length / quizStepSize);
   const answeredCount = Object.values(answers).filter((rating) => rating !== "unplayed").length;
   const radarData = useMemo(
@@ -150,13 +150,21 @@ export function OnboardingWizard({
               <div className="mt-1 text-2xl font-semibold text-orange-600">{answeredCount} / 15</div>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-7 gap-2">
+          <div className="mt-4 hidden sm:grid sm:grid-cols-7 gap-2">
             {steps.map((label, index) => (
               <div key={label} className="space-y-2">
                 <div className={`h-2 rounded-full ${index <= step ? "bg-orange-500" : "bg-orange-100"}`} />
                 <p className="text-xs text-stone-500">{label}</p>
               </div>
             ))}
+          </div>
+          <div className="mt-4 sm:hidden">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-2 rounded-full bg-orange-100 overflow-hidden">
+                <div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
+              </div>
+              <span className="text-xs font-medium text-stone-600 whitespace-nowrap">Step {step + 1} of {steps.length}</span>
+            </div>
           </div>
         </div>
 
@@ -179,10 +187,12 @@ export function OnboardingWizard({
                         <button
                           key={option.value}
                           type="button"
+                          role="radio"
+                          aria-checked={active}
                           onClick={() => setAnswers((current) => ({ ...current, [game.slug]: option.value }))}
-                          className={`rounded-2xl border px-3 py-3 text-sm font-medium transition ${active ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-200" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400 hover:text-orange-700"}`}
+                          className={`rounded-2xl border px-3 py-3 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-200 ring-2 ring-orange-300" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400 hover:text-orange-700"}`}
                         >
-                          {option.label}
+                          {active && <span aria-hidden="true">✓ </span>}{option.label}
                         </button>
                       );
                     })}
@@ -203,8 +213,9 @@ export function OnboardingWizard({
                     <button
                       key={theme}
                       type="button"
+                      aria-pressed={active}
                       onClick={() => toggleChoice(theme, themes, setThemes)}
-                      className={`rounded-full border px-4 py-2 text-sm font-medium capitalize transition ${active ? "border-orange-500 bg-orange-500 text-white" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400"}`}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-500 bg-orange-500 text-white" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400"}`}
                     >
                       {theme}
                     </button>
@@ -225,8 +236,9 @@ export function OnboardingWizard({
                     <button
                       key={mechanic}
                       type="button"
+                      aria-pressed={active}
                       onClick={() => toggleChoice(mechanic, mechanics, setMechanics)}
-                      className={`rounded-full border px-4 py-2 text-sm font-medium transition ${active ? "border-orange-500 bg-orange-500 text-white" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400"}`}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-500 bg-orange-500 text-white" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400"}`}
                     >
                       {mechanic.replace(/-/g, " ")}
                     </button>
@@ -243,7 +255,7 @@ export function OnboardingWizard({
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  className="w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none ring-0 transition focus:border-orange-400"
+                  className="w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 transition focus:border-orange-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                   placeholder="Your first name"
                 />
               </label>
@@ -253,7 +265,7 @@ export function OnboardingWizard({
                 <select
                   value={planId}
                   onChange={(event) => setPlanId(event.target.value as PlanId)}
-                  className="w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none transition focus:border-orange-400"
+                  className="w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 transition focus:border-orange-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                 >
                   <option value="discovery">Discovery</option>
                   <option value="explorer">Explorer</option>
@@ -269,6 +281,7 @@ export function OnboardingWizard({
                   max={6}
                   value={idealPlayerCount}
                   onChange={(event) => setIdealPlayerCount(Number(event.target.value))}
+                  aria-valuetext={`${idealPlayerCount} players`}
                   className="w-full accent-orange-500"
                 />
               </label>
@@ -282,6 +295,7 @@ export function OnboardingWizard({
                   step={5}
                   value={idealPlayTime}
                   onChange={(event) => setIdealPlayTime(Number(event.target.value))}
+                  aria-valuetext={`${idealPlayTime} minutes`}
                   className="w-full accent-orange-500"
                 />
               </label>
@@ -295,6 +309,7 @@ export function OnboardingWizard({
                   step={0.1}
                   value={complexityTarget}
                   onChange={(event) => setComplexityTarget(Number(event.target.value))}
+                  aria-valuetext={`${complexityTarget.toFixed(1)} out of 5 complexity`}
                   className="w-full accent-orange-500"
                 />
               </label>
@@ -331,11 +346,13 @@ export function OnboardingWizard({
             </div>
           )}
 
-          {(message || error) && (
-            <div className={`rounded-2xl px-4 py-3 text-sm ${message ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
-              {message ?? error}
-            </div>
-          )}
+          <div role="status" aria-live="polite">
+            {(message || error) && (
+              <div className={`rounded-2xl px-4 py-3 text-sm ${message ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
+                {message ?? error}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 border-t border-orange-100 bg-stone-50 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
@@ -344,7 +361,7 @@ export function OnboardingWizard({
               type="button"
               onClick={() => setStep((current) => Math.max(0, current - 1))}
               disabled={step === 0 || pending}
-              className="rounded-full border border-orange-200 bg-white px-5 py-2 text-sm font-medium text-stone-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full border border-orange-200 bg-white px-5 py-2 text-sm font-medium text-stone-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             >
               Back
             </button>
@@ -352,7 +369,7 @@ export function OnboardingWizard({
               type="button"
               onClick={handleSaveProgress}
               disabled={pending}
-              className="rounded-full border border-orange-200 bg-white px-5 py-2 text-sm font-medium text-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full border border-orange-200 bg-white px-5 py-2 text-sm font-medium text-orange-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             >
               {pending ? "Saving..." : "Save progress"}
             </button>
@@ -367,7 +384,7 @@ export function OnboardingWizard({
                   setStep((current) => Math.min(steps.length - 1, current + 1));
                 }}
                 disabled={pending}
-                className="rounded-full bg-stone-950 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-stone-950/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full bg-stone-950 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-stone-950/10 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
               >
                 Continue
               </button>
@@ -376,7 +393,7 @@ export function OnboardingWizard({
                 type="button"
                 onClick={handleSubmit}
                 disabled={pending}
-                className="rounded-full bg-orange-500 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full bg-orange-500 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-orange-300 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
               >
                 {pending ? "Finishing..." : "Finish onboarding"}
               </button>

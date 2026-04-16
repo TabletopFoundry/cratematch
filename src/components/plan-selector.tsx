@@ -56,10 +56,15 @@ export function PlanSelector({ plans, currentPlan, cutoff }: { plans: Plan[]; cu
               key={plan.id}
               type="button"
               onClick={() => setSelectedPlan(plan.id)}
-              className={`rounded-[1.75rem] border p-6 text-left transition ${active ? "border-orange-400 bg-white shadow-[0_24px_60px_-38px_rgba(194,65,12,0.55)]" : "border-orange-100 bg-white/80 hover:border-orange-300"}`}
+              className={`rounded-[1.75rem] border p-6 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-400 bg-white shadow-[0_24px_60px_-38px_rgba(194,65,12,0.55)]" : "border-orange-100 bg-white/80 hover:border-orange-300"}`}
             >
-              <div className={`inline-flex rounded-full bg-gradient-to-r px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white ${plan.accent}`}>
-                {plan.name}
+              <div className="flex items-center justify-between">
+                <div className={`inline-flex rounded-full bg-gradient-to-r px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white ${plan.accent}`}>
+                  {plan.name}
+                </div>
+                {currentPlan === plan.id && (
+                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Current plan</span>
+                )}
               </div>
               <div className="mt-4 text-3xl font-semibold text-stone-950">{plan.price}<span className="text-sm font-medium text-stone-500"> / month</span></div>
               <p className="mt-3 text-sm text-stone-600">{plan.description}</p>
@@ -105,7 +110,7 @@ export function PlanSelector({ plans, currentPlan, cutoff }: { plans: Plan[]; cu
             <p>You’ll immediately see the selected tier reflected across the monthly match and subscription views.</p>
           </div>
           {(status || error) && (
-            <div className={`mt-4 rounded-2xl px-4 py-3 text-sm ${status ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
+            <div role="status" aria-live="polite" className={`mt-4 rounded-2xl px-4 py-3 text-sm ${status ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
               {status ?? error}
             </div>
           )}
@@ -113,7 +118,7 @@ export function PlanSelector({ plans, currentPlan, cutoff }: { plans: Plan[]; cu
             type="button"
             onClick={handleCheckout}
             disabled={pending}
-            className="mt-6 w-full rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-stone-950/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-6 w-full rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-stone-950/10 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
           >
             {pending ? "Processing payment..." : "Complete mock checkout"}
           </button>

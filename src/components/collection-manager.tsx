@@ -42,7 +42,7 @@ export function CollectionManager({
           return !ownedSlugs.has(game.slug);
         }
 
-        return game.title.toLowerCase().includes(normalized) || game.themes.some((theme) => theme.includes(normalized));
+        return game.title.toLowerCase().includes(normalized) || game.themes.some((theme) => theme.includes(normalized)) || game.mechanics.some((mechanic) => mechanic.includes(normalized));
       })
       .slice(0, 8);
   }, [availableGames, ownedSlugs, search]);
@@ -102,7 +102,7 @@ export function CollectionManager({
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search titles, themes, or mechanics"
-              className="mt-2 w-full rounded-2xl border border-orange-200 bg-orange-50/60 px-4 py-3 outline-none transition focus:border-orange-400"
+              className="mt-2 w-full rounded-2xl border border-orange-200 bg-orange-50/60 px-4 py-3 transition focus:border-orange-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             />
           </div>
 
@@ -119,7 +119,7 @@ export function CollectionManager({
                     type="button"
                     disabled={owned || pending}
                     onClick={() => mutateCollection("add", game)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium ${owned ? "cursor-not-allowed border border-emerald-200 bg-emerald-50 text-emerald-800" : "bg-stone-950 text-white"}`}
+                    className={`rounded-full px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${owned ? "cursor-not-allowed border border-emerald-200 bg-emerald-50 text-emerald-800" : "bg-stone-950 text-white"}`}
                   >
                     {owned ? "Already owned" : pending ? "Updating..." : "Add game"}
                   </button>
@@ -149,11 +149,13 @@ export function CollectionManager({
         </div>
       </div>
 
-      {(status || error) && (
-        <div className={`rounded-2xl px-4 py-3 text-sm ${status ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
-          {status ?? error}
-        </div>
-      )}
+      <div role="status" aria-live="polite">
+        {(status || error) && (
+          <div className={`rounded-2xl px-4 py-3 text-sm ${status ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
+            {status ?? error}
+          </div>
+        )}
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-[2rem] border border-orange-100 bg-white p-6 shadow-[0_28px_70px_-44px_rgba(154,52,18,0.4)]">
@@ -178,7 +180,7 @@ export function CollectionManager({
                       type="button"
                       onClick={() => mutateCollection("remove", game)}
                       disabled={pending}
-                      className="rounded-full border border-orange-200 px-3 py-1.5 text-xs font-medium text-stone-700"
+                      className="rounded-full border border-orange-200 px-3 py-1.5 text-xs font-medium text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                     >
                       Remove
                     </button>

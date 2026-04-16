@@ -56,7 +56,7 @@ export function BoxDecisionPanel({
           type="button"
           onClick={() => updateDecision("keep")}
           disabled={pending}
-          className={`rounded-2xl border px-4 py-4 text-left transition ${decision === "keep" ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
+          className={`rounded-2xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${decision === "keep" ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
         >
           <div className="font-semibold">Keep it</div>
           <div className="mt-1 text-sm">Lock this pick into your collection preview.</div>
@@ -65,18 +65,20 @@ export function BoxDecisionPanel({
           type="button"
           onClick={() => updateDecision("return")}
           disabled={pending}
-          className={`rounded-2xl border px-4 py-4 text-left transition ${decision === "return" ? "border-rose-300 bg-rose-50 text-rose-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
+          className={`rounded-2xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${decision === "return" ? "border-rose-300 bg-rose-50 text-rose-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
         >
           <div className="font-semibold">Return / swap preview</div>
           <div className="mt-1 text-sm">Signal that you’d rather rotate into a backup option.</div>
         </button>
       </div>
       <div className="mt-4 text-xs uppercase tracking-[0.2em] text-stone-500">Current status: {pending ? "saving" : decision}</div>
-      {(message || error) && (
-        <div className={`mt-4 rounded-2xl px-4 py-3 text-sm ${message ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
-          {message ?? error}
-        </div>
-      )}
+      <div role="status" aria-live="polite">
+        {(message || error) && (
+          <div className={`mt-4 rounded-2xl px-4 py-3 text-sm ${message ? "border border-emerald-200 bg-emerald-50 text-emerald-900" : "border border-rose-200 bg-rose-50 text-rose-900"}`}>
+            {message ?? error}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

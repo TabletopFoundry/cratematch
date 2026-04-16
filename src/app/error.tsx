@@ -10,7 +10,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
         <button
           type="button"
           onClick={reset}
-          className="mt-6 rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white"
+          className="mt-6 rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
         >
           Try again
         </button>

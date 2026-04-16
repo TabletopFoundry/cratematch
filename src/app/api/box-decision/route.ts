@@ -9,7 +9,11 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as { gameSlug?: string; decision?: BoxDecision };
 
-    if (!body.gameSlug || !body.decision || !validDecisions.has(body.decision)) {
+    if (!body.gameSlug || typeof body.gameSlug !== "string" || body.gameSlug.trim().length === 0 || body.gameSlug.length > 100) {
+      return Response.json({ error: "Provide a valid game slug." }, { status: 400 });
+    }
+
+    if (!body.decision || !validDecisions.has(body.decision)) {
       return Response.json({ error: "Pick a valid box decision." }, { status: 400 });
     }
 

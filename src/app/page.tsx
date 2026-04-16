@@ -23,10 +23,10 @@ export default function Home() {
             CrateMatch blends taste onboarding, collection intelligence, and content-based curation to reveal one monthly board game that actually fits your table.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <Link href="/onboarding" className="rounded-full bg-stone-950 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-stone-950/15">
+            <Link href="/onboarding" className="rounded-full bg-stone-950 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-stone-950/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400">
               Start taste quiz
             </Link>
-            <Link href="/plans" className="rounded-full border border-orange-200 bg-white px-6 py-3 text-sm font-medium text-stone-700">
+            <Link href="/plans" className="rounded-full border border-orange-200 bg-white px-6 py-3 text-sm font-medium text-stone-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400">
               View subscription tiers
             </Link>
           </div>
@@ -118,6 +118,12 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
+              <Link
+                href="/plans"
+                className="mt-5 block w-full rounded-full bg-stone-950 px-5 py-3 text-center text-sm font-medium text-white shadow-lg shadow-stone-950/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+              >
+                Select {plan.name}
+              </Link>
             </div>
           ))}
         </div>

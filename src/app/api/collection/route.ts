@@ -6,8 +6,8 @@ async function handle(request: Request, action: "add" | "remove") {
   try {
     const body = (await request.json()) as { gameSlug?: string };
 
-    if (!body.gameSlug) {
-      return Response.json({ error: "Choose a game to update your collection." }, { status: 400 });
+    if (!body.gameSlug || typeof body.gameSlug !== "string" || body.gameSlug.trim().length === 0 || body.gameSlug.length > 100) {
+      return Response.json({ error: "Choose a valid game to update your collection (max 100 characters)." }, { status: 400 });
     }
 
     const snapshot = persistCollection(action, body.gameSlug);

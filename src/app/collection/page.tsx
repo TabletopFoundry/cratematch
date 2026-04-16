@@ -1,4 +1,5 @@
 import { CollectionManager } from "@/components/collection-manager";
+import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { getCollectionSnapshot } from "@/lib/server-data";
 
 export const runtime = "nodejs";
@@ -17,6 +18,7 @@ export default function CollectionPage() {
         </p>
       </section>
 
+      <ComponentErrorBoundary sectionName="Collection manager">
       <CollectionManager
         availableGames={snapshot.availableGames}
         initialOwnedGames={snapshot.ownedGames}
@@ -24,6 +26,7 @@ export default function CollectionPage() {
         recommendations={snapshot.recommendations}
         duplicateCount={snapshot.duplicateCount}
       />
+      </ComponentErrorBoundary>
     </div>
   );
 }
