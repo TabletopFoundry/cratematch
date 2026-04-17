@@ -17,8 +17,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CrateMatch",
+  title: {
+    default: "CrateMatch",
+    template: "%s | CrateMatch",
+  },
   description: "A personalized board game subscription MVP with AI curation, collection intelligence, and monthly box previews.",
+  openGraph: {
+    title: "CrateMatch — Personalized Board Game Subscription",
+    description: "Monthly board games matched to your taste profile and collection. Content-based curation with transparent explanations.",
+    type: "website",
+    locale: "en_US",
+    siteName: "CrateMatch",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

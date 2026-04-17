@@ -19,10 +19,7 @@ export function SiteHeader() {
   const drawerRef = useRef<HTMLElement>(null);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
-  // R1: Auto-close mobile drawer on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  // R1: Mobile drawer is closed via onClick handlers on each nav link below.
 
   // A1: Focus trap + Escape handler for mobile nav drawer
   const handleDrawerKeyDown = useCallback(
