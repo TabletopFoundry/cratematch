@@ -1,7 +1,6 @@
 import { getCommunitySnapshot } from "@/lib/server-data";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
 export default function CommunityPage() {
   const { posts, reviews, stats } = getCommunitySnapshot();

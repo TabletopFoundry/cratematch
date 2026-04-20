@@ -132,7 +132,7 @@ export function FeedbackForm({ pastBoxes }: { pastBoxes: BoxWithFeedback[] }) {
                 role="slider"
                 aria-label={`Rating for ${box.game?.title ?? box.gameSlug}`}
                 aria-labelledby={`rating-label-${box.boxMonth}`}
-                aria-valuemin={0}
+                aria-valuemin={1}
                 aria-valuemax={5}
                 aria-valuenow={currentRating}
                 aria-valuetext={currentRating ? `${currentRating} out of 5 stars` : "No rating selected"}

@@ -152,10 +152,15 @@ export default function Home() {
           <h2 className="mt-2 text-3xl font-semibold text-stone-950">Questions before your first box?</h2>
           <div className="mt-6 space-y-4">
             {faq.map((item) => (
-              <div key={item.question} className="rounded-[1.75rem] border border-orange-100 bg-white p-6 shadow-sm">
-                <div className="text-lg font-semibold text-stone-950">{item.question}</div>
-                <p className="mt-3 text-sm leading-7 text-stone-600">{item.answer}</p>
-              </div>
+              <details key={item.question} className="group rounded-[1.75rem] border border-orange-100 bg-white shadow-sm">
+                <summary className="cursor-pointer select-none px-6 py-5 text-lg font-semibold text-stone-950 [&::-webkit-details-marker]:hidden list-none">
+                  <span className="flex items-center justify-between gap-4">
+                    {item.question}
+                    <span className="shrink-0 text-orange-400 transition-transform group-open:rotate-45">+</span>
+                  </span>
+                </summary>
+                <p className="px-6 pb-6 text-sm leading-7 text-stone-600">{item.answer}</p>
+              </details>
             ))}
           </div>
         </div>

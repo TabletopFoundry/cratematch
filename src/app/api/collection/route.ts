@@ -1,3 +1,4 @@
+import { gameExists } from "@/lib/db";
 import { persistCollection } from "@/lib/server-data";
 
 export const runtime = "nodejs";
@@ -8,6 +9,10 @@ async function handle(request: Request, action: "add" | "remove") {
 
     if (!body.gameSlug || typeof body.gameSlug !== "string" || body.gameSlug.trim().length === 0 || body.gameSlug.length > 100) {
       return Response.json({ error: "Choose a valid game to update your collection (max 100 characters)." }, { status: 400 });
+    }
+
+    if (!gameExists(body.gameSlug)) {
+      return Response.json({ error: "Game not found in catalog." }, { status: 400 });
     }
 
     const snapshot = persistCollection(action, body.gameSlug);

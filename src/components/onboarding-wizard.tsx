@@ -128,7 +128,8 @@ export function OnboardingWizard({
 
     startTransition(async () => {
       try {
-        await persist("Taste profile saved. Your monthly crate preview is refreshed below.");
+        await persist("Taste profile saved. Redirecting to your box…");
+        router.push("/box");
       } catch (saveError) {
         setError(saveError instanceof Error ? saveError.message : "Unable to complete onboarding.");
       }
