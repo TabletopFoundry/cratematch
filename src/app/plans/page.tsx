@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { PlanSelector } from "@/components/plan-selector";
 import { getPlansSnapshot } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Subscription Plans",
+  description: "Compare Discovery, Explorer, and Collector subscription tiers. Choose the board game crate that matches your shelf ambition.",
+};
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

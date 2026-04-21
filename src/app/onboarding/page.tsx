@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { OnboardingWizard } from "@/components/onboarding-wizard";
 import { getOnboardingSnapshot, getProfileSummaryLine } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Taste Quiz",
+  description: "Rate 15 board games, choose themes and mechanics, and build your personalized taste profile for monthly curation.",
+};
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

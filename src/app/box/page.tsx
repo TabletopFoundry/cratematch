@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { BoxDecisionPanel } from "@/components/box-decision-panel";
 import { GameCover } from "@/components/game-cover";
 import { getBoxSnapshot } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Monthly Box",
+  description: "See this month's personalized board game match with transparent explanations, confidence scores, and backup alternatives.",
+};
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

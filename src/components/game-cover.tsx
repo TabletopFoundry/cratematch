@@ -20,6 +20,24 @@ function emojiFromTheme(theme: string) {
       return "🦊";
     case "cozy":
       return "☕";
+    case "mystery":
+      return "🔍";
+    case "economics":
+      return "💰";
+    case "city-building":
+      return "🏗️";
+    case "adventure":
+      return "🧭";
+    case "space":
+      return "🪐";
+    case "culture":
+      return "🎭";
+    case "mythology":
+      return "⚡";
+    case "travel":
+      return "✈️";
+    case "social":
+      return "🎉";
     default:
       return "🎲";
   }

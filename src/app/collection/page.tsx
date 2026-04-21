@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { CollectionManager } from "@/components/collection-manager";
 import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { getCollectionSnapshot } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Collection Intelligence",
+  description: "Manage your board game collection, discover gaps, and get complementary recommendations that expand your shelf.",
+};
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

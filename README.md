@@ -4,6 +4,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 **A personalized board game subscription MVP with content-based curation, collection intelligence, and transparent recommendation explanations.**
 
@@ -105,6 +106,7 @@ docs/
 | `npm run build` | Create production build |
 | `npm run start` | Serve production build |
 | `npm run lint` | Run ESLint checks |
+| `npm run type-check` | Run TypeScript type checking |
 
 ---
 
@@ -116,6 +118,8 @@ The app uses SQLite for local demo state. On first run, it seeds:
 - **Demo subscriber profile** with quiz answers, selected plan, collection, and box history
 
 All data is stored in `data/cratematch.db` (gitignored). Delete it to reset to a fresh state.
+
+| `/api/health` | Health check endpoint (GET) |
 
 ---
 
@@ -141,4 +145,4 @@ Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for g
 
 ## 📄 License
 
-This project is for demonstration and educational purposes.
+This project is licensed under the [MIT License](./LICENSE).

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { FeedbackForm } from "@/components/feedback-form";
 import { getFeedbackSnapshot } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Feedback",
+  description: "Rate your past crates, tag what worked, and leave notes to improve future board game recommendations.",
+};
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

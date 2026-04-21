@@ -6,3 +6,16 @@ data/*.db-wal
 *.db
 .env
 .env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.tsbuildinfo
+coverage/
+out/
+
+# Deployment
+.vercel
+.turbo

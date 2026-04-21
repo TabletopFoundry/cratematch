@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
+
 import { getCommunitySnapshot } from "@/lib/server-data";
+
+export const metadata: Metadata = {
+  title: "Community",
+  description: "Browse unboxings, subscriber reactions, and featured reviews from the CrateMatch community.",
+};
 
 export const runtime = "nodejs";
 
