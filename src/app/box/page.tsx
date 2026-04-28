@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BoxDecisionPanel } from "@/components/box-decision-panel";
+import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { GameCover } from "@/components/game-cover";
 import { getBoxSnapshot } from "@/lib/server-data";
 
@@ -76,7 +77,9 @@ export default function BoxPage() {
             </div>
           </div>
 
-          <BoxDecisionPanel gameSlug={currentMatch.game.slug} monthLabel={monthLabel} initialDecision={decision} />
+          <ComponentErrorBoundary sectionName="Box decision">
+            <BoxDecisionPanel gameSlug={currentMatch.game.slug} monthLabel={monthLabel} initialDecision={decision} />
+          </ComponentErrorBoundary>
         </div>
       </section>
 

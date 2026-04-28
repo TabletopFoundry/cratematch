@@ -4,7 +4,7 @@ import { GameCover } from "@/components/game-cover";
 import { getLandingPageSnapshot } from "@/lib/server-data";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default function Home() {
   const { featuredMatch, testimonials, faq, plans, howItWorks, stats } = getLandingPageSnapshot();

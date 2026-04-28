@@ -15,8 +15,8 @@ async function handle(request: Request, action: "add" | "remove") {
       return Response.json({ error: "Game not found in catalog." }, { status: 400 });
     }
 
-    const snapshot = persistCollection(action, body.gameSlug);
-    return Response.json({ ok: true, snapshot });
+    persistCollection(action, body.gameSlug);
+    return Response.json({ ok: true });
   } catch {
     return Response.json({ error: "Unable to update collection." }, { status: 500 });
   }

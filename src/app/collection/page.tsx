@@ -31,7 +31,7 @@ export default function CollectionPage() {
         initialOwnedGames={snapshot.ownedGames}
         insights={snapshot.insights}
         recommendations={snapshot.recommendations}
-        duplicateCount={snapshot.duplicateCount}
+        ownedCount={snapshot.ownedCount}
       />
       </ComponentErrorBoundary>
     </div>

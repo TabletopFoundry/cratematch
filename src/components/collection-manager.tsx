@@ -17,13 +17,13 @@ export function CollectionManager({
   initialOwnedGames,
   insights,
   recommendations,
-  duplicateCount,
+  ownedCount,
 }: {
   availableGames: Game[];
   initialOwnedGames: Game[];
   insights: CollectionInsight[];
   recommendations: RecommendationCard[];
-  duplicateCount: number;
+  ownedCount: number;
 }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -89,7 +89,7 @@ export function CollectionManager({
               <h3 className="mt-2 text-2xl font-semibold text-stone-950">Manage the games you already own</h3>
             </div>
             <div className="rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm text-stone-700">
-              Duplicate flags prevented: {duplicateCount}
+              Games owned: {ownedCount}
             </div>
           </div>
 

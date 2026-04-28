@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ComponentErrorBoundary } from "@/components/component-error-boundary";
 import { PlanSelector } from "@/components/plan-selector";
 import { getPlansSnapshot } from "@/lib/server-data";
 
@@ -27,7 +28,9 @@ export default function PlansPage() {
         </div>
       </section>
 
-      <PlanSelector plans={plans} currentPlan={profile.planId} cutoff={cutoff} />
+      <ComponentErrorBoundary sectionName="Plan selector">
+        <PlanSelector plans={plans} currentPlan={profile.planId} cutoff={cutoff} />
+      </ComponentErrorBoundary>
     </div>
   );
 }

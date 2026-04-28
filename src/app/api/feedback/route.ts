@@ -1,3 +1,4 @@
+import { getPastBoxes } from "@/lib/db";
 import { persistFeedback } from "@/lib/server-data";
 
 export const runtime = "nodejs";
@@ -32,15 +33,26 @@ export async function POST(request: Request) {
       return Response.json({ error: "Comment must be a string of at most 2000 characters." }, { status: 400 });
     }
 
-    const snapshot = persistFeedback({
-      boxMonth: body.boxMonth.trim(),
-      gameSlug: body.gameSlug.trim(),
+    const pastBoxes = getPastBoxes();
+    const trimmedMonth = body.boxMonth.trim();
+    const trimmedSlug = body.gameSlug.trim();
+    const targetBox = pastBoxes.find((b) => b.boxMonth === trimmedMonth);
+    if (!targetBox) {
+      return Response.json({ error: "No delivery found for that month." }, { status: 400 });
+    }
+    if (targetBox.gameSlug !== trimmedSlug) {
+      return Response.json({ error: "Game slug doesn't match the delivered game." }, { status: 400 });
+    }
+
+    persistFeedback({
+      boxMonth: trimmedMonth,
+      gameSlug: trimmedSlug,
       rating: body.rating,
       tags: (body.tags ?? []).map((t) => t.trim().slice(0, 50)),
       comment: (body.comment ?? "").trim().slice(0, 2000),
     });
 
-    return Response.json({ ok: true, snapshot });
+    return Response.json({ ok: true });
   } catch {
     return Response.json({ error: "Unable to save feedback." }, { status: 500 });
   }

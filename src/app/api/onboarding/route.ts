@@ -1,3 +1,4 @@
+import { ALL_THEMES, ALL_MECHANICS } from "@/lib/catalog";
 import { persistOnboarding } from "@/lib/server-data";
 import type { PlanId, QuizAnswer, RatingValue } from "@/lib/types";
 
@@ -29,8 +30,16 @@ export async function POST(request: Request) {
       return Response.json({ error: "Themes must be an array of strings (max 50 chars each)." }, { status: 400 });
     }
 
+    if (body.themes.length > 20) {
+      return Response.json({ error: "Select up to 20 themes." }, { status: 400 });
+    }
+
     if (!Array.isArray(body.mechanics) || body.mechanics.some((m) => typeof m !== "string" || m.length > 50)) {
       return Response.json({ error: "Mechanics must be an array of strings (max 50 chars each)." }, { status: 400 });
+    }
+
+    if (body.mechanics.length > 20) {
+      return Response.json({ error: "Select up to 20 mechanics." }, { status: 400 });
     }
 
     if (!Array.isArray(body.answers)) {
@@ -50,6 +59,15 @@ export async function POST(request: Request) {
       })
       .map((a) => ({ gameSlug: (a.gameSlug as string).trim(), rating: a.rating as RatingValue }));
 
+    if (sanitizedAnswers.length > 50) {
+      return Response.json({ error: "Too many quiz answers." }, { status: 400 });
+    }
+
+    const validThemes = new Set<string>(ALL_THEMES);
+    const validMechanics = new Set<string>(ALL_MECHANICS);
+    const sanitizedThemes = body.themes.map((t) => t.trim().slice(0, 50)).filter((t) => validThemes.has(t));
+    const sanitizedMechanics = body.mechanics.map((m) => m.trim().slice(0, 50)).filter((m) => validMechanics.has(m));
+
     const playerCount = Number(body.idealPlayerCount ?? 4);
     if (!Number.isFinite(playerCount) || playerCount < 1 || playerCount > 6) {
       return Response.json({ error: "Ideal player count must be between 1 and 6." }, { status: 400 });
@@ -65,18 +83,18 @@ export async function POST(request: Request) {
       return Response.json({ error: "Complexity target must be between 1 and 5." }, { status: 400 });
     }
 
-    const snapshot = persistOnboarding({
+    persistOnboarding({
       name: body.name.trim().slice(0, 100),
       planId: body.planId,
       idealPlayerCount: playerCount,
       idealPlayTime: playTime,
       complexityTarget: complexity,
-      themes: body.themes.map((t) => t.trim().slice(0, 50)),
-      mechanics: body.mechanics.map((m) => m.trim().slice(0, 50)),
+      themes: sanitizedThemes,
+      mechanics: sanitizedMechanics,
       answers: sanitizedAnswers,
     });
 
-    return Response.json({ ok: true, snapshot });
+    return Response.json({ ok: true });
   } catch {
     return Response.json({ error: "Unable to save onboarding right now." }, { status: 500 });
   }

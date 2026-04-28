@@ -13,8 +13,8 @@ export async function POST(request: Request) {
       return Response.json({ error: "Select a valid subscription tier." }, { status: 400 });
     }
 
-    const snapshot = persistPlan(body.planId);
-    return Response.json({ ok: true, snapshot });
+    persistPlan(body.planId);
+    return Response.json({ ok: true });
   } catch {
     return Response.json({ error: "Checkout is temporarily unavailable." }, { status: 500 });
   }

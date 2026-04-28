@@ -129,31 +129,35 @@ export function FeedbackForm({ pastBoxes }: { pastBoxes: BoxWithFeedback[] }) {
               <div className="text-sm font-medium text-stone-700" id={`rating-label-${box.boxMonth}`}>Rate this crate</div>
               <div
                 className="mt-2 flex gap-2"
-                role="slider"
+                role="radiogroup"
                 aria-label={`Rating for ${box.game?.title ?? box.gameSlug}`}
                 aria-labelledby={`rating-label-${box.boxMonth}`}
-                aria-valuemin={1}
-                aria-valuemax={5}
-                aria-valuenow={currentRating}
-                aria-valuetext={currentRating ? `${currentRating} out of 5 stars` : "No rating selected"}
-                tabIndex={0}
-                onKeyDown={(event) => {
-                  if (event.key === "ArrowRight" || event.key === "ArrowUp") {
-                    event.preventDefault();
-                    setRatings((current) => ({ ...current, [box.boxMonth]: Math.min(5, (current[box.boxMonth] ?? 0) + 1) }));
-                  } else if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
-                    event.preventDefault();
-                    setRatings((current) => ({ ...current, [box.boxMonth]: Math.max(1, (current[box.boxMonth] ?? 2) - 1) }));
-                  }
-                }}
               >
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
-                    tabIndex={-1}
-                    aria-hidden="true"
+                    role="radio"
+                    aria-checked={currentRating === star}
+                    aria-label={`${star} out of 5 stars`}
+                    tabIndex={currentRating === star || (currentRating === 0 && star === 1) ? 0 : -1}
                     onClick={() => setRatings((current) => ({ ...current, [box.boxMonth]: star }))}
+                    onKeyDown={(event) => {
+                      let next = star;
+                      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+                        event.preventDefault();
+                        next = star < 5 ? star + 1 : 1;
+                      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+                        event.preventDefault();
+                        next = star > 1 ? star - 1 : 5;
+                      } else {
+                        return;
+                      }
+                      setRatings((current) => ({ ...current, [box.boxMonth]: next }));
+                      const container = event.currentTarget.parentElement;
+                      const nextButton = container?.children[next - 1] as HTMLElement | undefined;
+                      nextButton?.focus();
+                    }}
                     className={`flex h-11 w-11 items-center justify-center rounded-xl border text-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${
                       currentRating >= star
                         ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-200"
@@ -200,8 +204,12 @@ export function FeedbackForm({ pastBoxes }: { pastBoxes: BoxWithFeedback[] }) {
                 onChange={(event) => setComments((current) => ({ ...current, [box.boxMonth]: event.target.value }))}
                 placeholder="Tell us what you thought..."
                 rows={3}
+                maxLength={2000}
                 className="mt-2 w-full rounded-2xl border border-orange-200 bg-orange-50/60 px-4 py-3 text-sm transition focus:border-orange-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
               />
+              <div className="mt-1 text-right text-xs text-stone-400">
+                {(comments[box.boxMonth] ?? "").length}/2000
+              </div>
             </div>
 
             <button

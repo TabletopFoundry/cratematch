@@ -42,7 +42,7 @@ export default function CommunityPage() {
                     📦
                   </div>
                   <div>
-                    <div className="font-semibold text-stone-950">{post.name}</div>
+                    <h3 className="font-semibold text-stone-950">{post.name}</h3>
                     <div className="text-sm text-stone-500">{post.handle} · {post.location}</div>
                   </div>
                 </div>
