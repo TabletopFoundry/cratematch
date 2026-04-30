@@ -13,6 +13,23 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      // Catch common bugs
+      "no-constant-binary-expression": "error",
+      "no-constructor-return": "error",
+      "no-self-compare": "error",
+      "no-template-curly-in-string": "warn",
+
+      // Code quality
+      "no-lonely-if": "warn",
+      "prefer-template": "warn",
+
+      // TypeScript strictness (via eslint-config-next/typescript)
+      "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
+      "@typescript-eslint/no-import-type-side-effects": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

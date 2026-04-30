@@ -78,7 +78,7 @@ export function SiteHeader() {
 
         <nav aria-label="Main navigation" className="hidden items-center gap-5 text-sm font-medium text-stone-600 md:flex">
           {links.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(link.href + "/");
+            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
@@ -121,7 +121,7 @@ export function SiteHeader() {
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
             {links.map((link) => {
-              const active = pathname === link.href || pathname.startsWith(link.href + "/");
+              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
               return (
                 <Link
                   key={link.href}
