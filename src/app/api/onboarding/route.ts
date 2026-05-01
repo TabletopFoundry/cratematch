@@ -1,4 +1,4 @@
-import { ALL_THEMES, ALL_MECHANICS } from "@/lib/catalog";
+import { ALL_THEMES, ALL_MECHANICS, QUIZ_GAME_SLUGS } from "@/lib/catalog";
 import { persistOnboarding } from "@/lib/server-data";
 import type { PlanId, QuizAnswer, RatingValue } from "@/lib/types";
 
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
     }
 
     const validRatings = new Set<RatingValue>(["loved", "liked", "neutral", "disliked", "unplayed"]);
+    const validQuizSlugs = new Set<string>(QUIZ_GAME_SLUGS);
     const sanitizedAnswers: QuizAnswer[] = (body.answers as unknown[])
       .filter(
         (a): a is Record<string, unknown> =>
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
       .filter((a) => {
         const slug = a.gameSlug as string;
         const rating = a.rating as string;
-        return slug.length > 0 && slug.length <= 100 && validRatings.has(rating as RatingValue);
+        return slug.length > 0 && slug.length <= 100 && validRatings.has(rating as RatingValue) && validQuizSlugs.has(slug.trim());
       })
       .map((a) => ({ gameSlug: (a.gameSlug as string).trim(), rating: a.rating as RatingValue }));
 

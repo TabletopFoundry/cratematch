@@ -1,5 +1,6 @@
 import { getPastBoxes } from "@/lib/db";
 import { persistFeedback } from "@/lib/server-data";
+import { MONTH_PATTERN } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
@@ -13,8 +14,8 @@ export async function POST(request: Request) {
       comment?: string;
     };
 
-    if (!body.boxMonth || typeof body.boxMonth !== "string" || body.boxMonth.trim().length === 0 || body.boxMonth.length > 20) {
-      return Response.json({ error: "Provide a valid box month (max 20 characters)." }, { status: 400 });
+    if (!body.boxMonth || typeof body.boxMonth !== "string" || !MONTH_PATTERN.test(body.boxMonth)) {
+      return Response.json({ error: "Provide a valid month label (YYYY-MM)." }, { status: 400 });
     }
 
     if (!body.gameSlug || typeof body.gameSlug !== "string" || body.gameSlug.trim().length === 0 || body.gameSlug.length > 100) {
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
 
     if (body.tags !== undefined && (!Array.isArray(body.tags) || body.tags.some((t) => typeof t !== "string" || t.length > 50))) {
       return Response.json({ error: "Tags must be an array of strings (max 50 chars each)." }, { status: 400 });
+    }
+
+    if ((body.tags?.length ?? 0) > 20) {
+      return Response.json({ error: "Select up to 20 tags." }, { status: 400 });
     }
 
     if (body.comment !== undefined && (typeof body.comment !== "string" || body.comment.length > 2000)) {

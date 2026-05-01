@@ -1,10 +1,10 @@
-import { getCurrentBoxMonth, persistBoxDecision } from "@/lib/server-data";
+import { getCurrentBoxMonth, getCurrentRecommendationSlug, persistBoxDecision } from "@/lib/server-data";
 import type { BoxDecision } from "@/lib/types";
+import { MONTH_PATTERN } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
 const validDecisions = new Set<BoxDecision>(["keep", "return", "undecided"]);
-const MONTH_PATTERN = /^\d{4}-\d{2}$/;
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +26,14 @@ export async function POST(request: Request) {
     if (body.monthLabel !== serverMonth) {
       return Response.json(
         { error: "Month mismatch — your session shows a different month than the server. Please refresh the page." },
+        { status: 409 },
+      );
+    }
+
+    const expectedSlug = getCurrentRecommendationSlug();
+    if (!expectedSlug || body.gameSlug.trim() !== expectedSlug) {
+      return Response.json(
+        { error: "Game slug doesn't match the current recommendation. Please refresh the page." },
         { status: 409 },
       );
     }

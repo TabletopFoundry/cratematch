@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { BoxDecisionPanel } from "@/components/box-decision-panel";
 import { ComponentErrorBoundary } from "@/components/component-error-boundary";
@@ -20,7 +21,13 @@ export default function BoxPage() {
     return (
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-[2rem] border border-dashed border-orange-200 bg-orange-50/70 px-6 py-12 text-center text-stone-600">
-          We need a completed taste profile before revealing this month’s match. Head to onboarding to unlock the preview.
+          <p>We need a completed taste profile before revealing this month&apos;s match.</p>
+          <Link
+            href="/onboarding"
+            className="mt-4 inline-block rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-600"
+          >
+            Start onboarding →
+          </Link>
         </div>
       </div>
     );
