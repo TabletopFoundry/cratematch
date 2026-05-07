@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import { RATING_OPTIONS } from "@/lib/catalog";
@@ -89,6 +89,34 @@ export function OnboardingWizard({
     }
 
     setter([...collection, value]);
+  }
+
+  function setGameAnswer(gameSlug: string, rating: QuizAnswer["rating"]) {
+    setAnswers((current) => ({ ...current, [gameSlug]: rating }));
+  }
+
+  function handleRatingKeyDown(event: KeyboardEvent<HTMLButtonElement>, gameSlug: string, optionIndex: number) {
+    let nextIndex = optionIndex;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      nextIndex = (optionIndex + 1) % RATING_OPTIONS.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      nextIndex = (optionIndex - 1 + RATING_OPTIONS.length) % RATING_OPTIONS.length;
+    } else {
+      return;
+    }
+
+    const nextValue = RATING_OPTIONS[nextIndex]?.value;
+    if (!nextValue) {
+      return;
+    }
+
+    setGameAnswer(gameSlug, nextValue);
+    const container = event.currentTarget.parentElement;
+    const nextButton = container?.children[nextIndex] as HTMLElement | undefined;
+    nextButton?.focus();
   }
 
   async function persist(currentMessage: string) {
@@ -182,7 +210,7 @@ export function OnboardingWizard({
                     <div className="text-xs uppercase tracking-[0.2em] text-orange-500">{game.themes.slice(0, 2).join(" • ")}</div>
                   </div>
                   <div className="mt-4 grid gap-2 sm:grid-cols-5" role="radiogroup" aria-label={`Rate ${game.title}`}>
-                    {RATING_OPTIONS.map((option) => {
+                    {RATING_OPTIONS.map((option, optionIndex) => {
                       const active = (answers[game.slug] ?? "unplayed") === option.value;
                       return (
                         <button
@@ -190,7 +218,9 @@ export function OnboardingWizard({
                           type="button"
                           role="radio"
                           aria-checked={active}
-                          onClick={() => setAnswers((current) => ({ ...current, [game.slug]: option.value }))}
+                          tabIndex={active ? 0 : -1}
+                          onClick={() => setGameAnswer(game.slug, option.value)}
+                          onKeyDown={(event) => handleRatingKeyDown(event, game.slug, optionIndex)}
                           className={`rounded-2xl border px-3 py-3 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-200 ring-2 ring-orange-300" : "border-orange-200 bg-white text-stone-700 hover:border-orange-400 hover:text-orange-700"}`}
                         >
                           {active && <span aria-hidden="true">✓ </span>}{option.label}
@@ -252,10 +282,14 @@ export function OnboardingWizard({
           {step === quizStepCount + 2 && (
             <div className="grid gap-6 lg:grid-cols-2">
               <label className="space-y-2 text-sm font-medium text-stone-700">
-                <span>Name</span>
+                <span className="flex items-center justify-between gap-3">
+                  <span>Name</span>
+                  <span className="text-xs font-normal text-stone-400">{name.length}/100</span>
+                </span>
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
+                  maxLength={100}
                   className="w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 transition focus:border-orange-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                   placeholder="Your first name"
                 />
