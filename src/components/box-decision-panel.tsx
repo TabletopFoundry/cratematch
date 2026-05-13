@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import type { BoxDecision } from "@/lib/types";
@@ -19,6 +19,34 @@ export function BoxDecisionPanel({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const decisionOptions: Array<{ value: BoxDecision; title: string; body: string }> = [
+    { value: "keep", title: "Keep it", body: "Lock this pick into your collection preview." },
+    { value: "return", title: "Return / swap preview", body: "Signal that you’d rather rotate into a backup option." },
+  ];
+
+  function handleDecisionKeyDown(event: KeyboardEvent<HTMLButtonElement>, optionIndex: number) {
+    let nextIndex = optionIndex;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      nextIndex = (optionIndex + 1) % decisionOptions.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      nextIndex = (optionIndex - 1 + decisionOptions.length) % decisionOptions.length;
+    } else {
+      return;
+    }
+
+    const nextDecision = decisionOptions[nextIndex];
+    if (!nextDecision) {
+      return;
+    }
+
+    updateDecision(nextDecision.value);
+    const container = event.currentTarget.parentElement;
+    const nextButton = container?.children[nextIndex] as HTMLElement | undefined;
+    nextButton?.focus();
+  }
 
   function updateDecision(nextDecision: BoxDecision) {
     setError(null);
@@ -51,25 +79,34 @@ export function BoxDecisionPanel({
       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-orange-500">Keep / return preview</p>
       <h3 className="mt-2 text-xl font-semibold text-stone-950">Decide how this month’s reveal lands on your shelf</h3>
       <p className="mt-2 text-sm text-stone-600">This is a mock workflow for the MVP, designed to demonstrate how subscribers could react before the next recommendation cycle.</p>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <button
-          type="button"
-          onClick={() => updateDecision("keep")}
-          disabled={pending}
-          className={`rounded-2xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${decision === "keep" ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
-        >
-          <div className="font-semibold">Keep it</div>
-          <div className="mt-1 text-sm">Lock this pick into your collection preview.</div>
-        </button>
-        <button
-          type="button"
-          onClick={() => updateDecision("return")}
-          disabled={pending}
-          className={`rounded-2xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${decision === "return" ? "border-rose-300 bg-rose-50 text-rose-900" : "border-orange-200 bg-orange-50/60 text-stone-700"}`}
-        >
-          <div className="font-semibold">Return / swap preview</div>
-          <div className="mt-1 text-sm">Signal that you’d rather rotate into a backup option.</div>
-        </button>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Keep or return this month’s box">
+        {decisionOptions.map((option, optionIndex) => {
+          const active = decision === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              tabIndex={active ? 0 : -1}
+              onClick={() => updateDecision(option.value)}
+              onKeyDown={(event) => handleDecisionKeyDown(event, optionIndex)}
+              disabled={pending}
+              className={`rounded-2xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${
+                option.value === "keep"
+                  ? active
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+                    : "border-orange-200 bg-orange-50/60 text-stone-700"
+                  : active
+                    ? "border-rose-300 bg-rose-50 text-rose-900"
+                    : "border-orange-200 bg-orange-50/60 text-stone-700"
+              }`}
+            >
+              <div className="font-semibold">{option.title}</div>
+              <div className="mt-1 text-sm">{option.body}</div>
+            </button>
+          );
+        })}
       </div>
       <div className="mt-4 text-xs uppercase tracking-[0.2em] text-stone-500">Current status: {pending ? "saving" : decision}</div>
       <div role="status" aria-live="polite">

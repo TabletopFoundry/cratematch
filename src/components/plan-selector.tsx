@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import type { PlanId } from "@/lib/types";
@@ -20,6 +20,30 @@ export function PlanSelector({ plans, currentPlan, cutoff }: { plans: Plan[]; cu
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  function handlePlanKeyDown(event: KeyboardEvent<HTMLButtonElement>, optionIndex: number) {
+    let nextIndex = optionIndex;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      nextIndex = (optionIndex + 1) % plans.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      nextIndex = (optionIndex - 1 + plans.length) % plans.length;
+    } else {
+      return;
+    }
+
+    const nextPlan = plans[nextIndex];
+    if (!nextPlan) {
+      return;
+    }
+
+    setSelectedPlan(nextPlan.id);
+    const container = event.currentTarget.parentElement;
+    const nextButton = container?.children[nextIndex] as HTMLElement | undefined;
+    nextButton?.focus();
+  }
 
   function handleCheckout() {
     setStatus(null);
@@ -48,14 +72,18 @@ export function PlanSelector({ plans, currentPlan, cutoff }: { plans: Plan[]; cu
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 lg:grid-cols-3">
-        {plans.map((plan) => {
+      <div className="grid gap-4 lg:grid-cols-3" role="radiogroup" aria-label="Subscription plans">
+        {plans.map((plan, optionIndex) => {
           const active = selectedPlan === plan.id;
           return (
             <button
               key={plan.id}
               type="button"
+              role="radio"
+              aria-checked={active}
+              tabIndex={active ? 0 : -1}
               onClick={() => setSelectedPlan(plan.id)}
+              onKeyDown={(event) => handlePlanKeyDown(event, optionIndex)}
               className={`rounded-[1.75rem] border p-6 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 ${active ? "border-orange-400 bg-white shadow-[0_24px_60px_-38px_rgba(194,65,12,0.55)]" : "border-orange-100 bg-white/80 hover:border-orange-300"}`}
             >
               <div className="flex items-center justify-between">
