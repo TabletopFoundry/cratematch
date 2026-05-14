@@ -22,6 +22,12 @@ export class ComponentErrorBoundary extends React.Component<ErrorBoundaryProps, 
     return { hasError: true };
   }
 
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error(error, errorInfo);
+    }
+  }
+
   handleReset = () => {
     this.setState({ hasError: false });
   };
