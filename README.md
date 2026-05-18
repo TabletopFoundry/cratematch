@@ -10,7 +10,7 @@
 
 CrateMatch matches subscribers with a monthly board game tailored to their taste profile and existing collection — not a random pick from a warehouse. It combines a multi-step taste quiz, preference-weighted scoring, and explainable recommendation logic to deliver one game each month that actually fits your table.
 
-> **Status:** This is a fully functional MVP with SQLite persistence, 65 seeded board games, and end-to-end flows from onboarding through delivery feedback.
+> **Status:** This is a fully functional MVP with SQLite persistence, 65 seeded board games, a rich demo subscriber history, and end-to-end flows from onboarding through delivery feedback.
 
 ---
 
@@ -47,7 +47,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — the app auto-seeds 65 real board games on first run.
+Open [http://localhost:3000](http://localhost:3000) — local development auto-seeds the full demo dataset on first run.
 
 ---
 
@@ -112,12 +112,18 @@ docs/
 
 ## 🗄️ Data Persistence
 
-The app uses SQLite for local demo state. On first run, it seeds:
+The app uses SQLite for local demo state. In local development (or when `CRATEMATCH_ENABLE_DEMO_SEED=true`), first run seeds:
 
-- **65 real board games** with metadata (themes, mechanics, player counts, complexity, prices)
-- **Demo subscriber profile** with quiz answers, selected plan, collection, and box history
+- **65 real board games** with rich theme/mechanic metadata, player counts, complexity, and pricing
+- **A demo subscriber with completed onboarding** (15 quiz ratings, 8 preferred themes, 8 preferred mechanics, Collector plan)
+- **26 owned games** in the current collection, including kept crate picks
+- **8 months of crate history** with keep/return decisions, notes, and post-delivery feedback
+- **49 recommendation snapshot rows** showing monthly personalized matches, alternatives, confidence, and explanation payloads
+- **Edge-case curation examples** such as campaign-heavy returns and unusual mechanic blends like card-crafting, trick-taking co-op, and racing
 
-All data is stored in `data/cratematch.db` (gitignored). Delete it to reset to a fresh state.
+In production, CrateMatch always creates the schema and game catalog, but it only hydrates the full demo subscriber when `CRATEMATCH_ENABLE_DEMO_SEED=true`. Without that flag, the app keeps a blank demo profile so onboarding can start safely without overwriting production data.
+
+All data is stored in `data/cratematch.db` (gitignored). Delete it to reset to a fresh state and reapply the latest seed version.
 
 | `/api/health` | Health check endpoint (GET) |
 

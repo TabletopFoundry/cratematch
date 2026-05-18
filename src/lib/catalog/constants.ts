@@ -1,0 +1,73 @@
+import type { RatingOption } from "@/lib/types";
+
+export const ALL_THEMES = [
+  "fantasy",
+  "sci-fi",
+  "historical",
+  "nature",
+  "horror",
+  "mystery",
+  "economics",
+  "city-building",
+  "cozy",
+  "adventure",
+  "animals",
+  "space",
+  "culture",
+  "mythology",
+  "travel",
+  "social",
+] as const;
+
+export const ALL_MECHANICS = [
+  "deck-building",
+  "worker-placement",
+  "area-control",
+  "cooperative",
+  "draft",
+  "engine-building",
+  "tile-laying",
+  "set-collection",
+  "hand-management",
+  "push-your-luck",
+  "tableau-building",
+  "deduction",
+  "bluffing",
+  "auction",
+  "trick-taking",
+  "route-building",
+  "resource-management",
+  "pattern-building",
+  "campaign",
+  "asymmetric",
+  "party",
+  "team-play",
+  "race",
+  "scenario",
+] as const;
+
+export const RATING_OPTIONS: RatingOption[] = [
+  { value: "loved", label: "Loved" },
+  { value: "liked", label: "Liked" },
+  { value: "neutral", label: "Neutral" },
+  { value: "disliked", label: "Disliked" },
+  { value: "unplayed", label: "Haven't played" },
+];
+
+export const QUIZ_GAME_SLUGS = [
+  "catan",
+  "ticket-to-ride",
+  "carcassonne",
+  "pandemic",
+  "azul",
+  "wingspan",
+  "splendor",
+  "dominion",
+  "seven-wonders",
+  "codenames",
+  "everdell",
+  "root",
+  "spirit-island",
+  "terraforming-mars",
+  "scythe",
+] as const;
